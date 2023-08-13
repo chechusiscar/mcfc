@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="icon" href="https://chechu.co/wp-content/uploads/2022/02/cropped-Chechu-Logos-03-192x192.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="https://chechu.co/wp-content/uploads/2022/02/cropped-Chechu-Logos-03-180x180.png" />
+        <link rel="stylesheet" href="static/style.css">
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <style type="text/css">
+            .py-error {
+                display: none;
+            }
+        </style>
+        <title>mcfc - Multiple choice flashcard utility</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="px-4 pt-5 my-5 text-center border-bottom">
+                <h1 class="display-4 fw-bold">mcfc</h1>
+                <div class="col-lg-6 mx-auto">
+                    <p class="lead mb-4">A utility to create multiple-choice flashcards more efficiently.</p>
+                </div>
+                <!--
+                <div class="collapse" id="usageInstructions" data-bs-parent="#UsageButton">
+                    <div class="card card-body">
+                        <h2>Usage instructions</h2>
+                        <ol>
+                            <li>Coming soon!</li>
+                        </ol>
+
+                        <h2>Known limitations</h2>
+                        <ul>
+                            <li>Coming soon!</li>
+                        </ul>
+                    </div>
+                </div>
+                -->
+                <!--
+                <div class="overflow-hidden" style="max-height: 30vh;">
+                    <div class="container px-5">
+                        <img src="static/screenshot.png" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Sample input and output" width="700" height="500" loading="lazy">
+                    </div>
+                </div>
+                -->
+            </div>
+
+            <p></p>
+            
+            <py-script>
+                import re
+                import js
+
+                def read_multiline_strings_from_file(text):
+                    # Split the string into a list of multiline strings
+                    multiline_strings = re.split(r"[\n\r]+\d+.", text)
+
+                    multiline_strings[0] = multiline_strings[0].replace("1.", "")
+                        
+                    for multiline_string in range(len(multiline_strings)):
+                        # Remove extra whitespace from the beginning and end of each multiline string
+                        multiline_strings[multiline_string] = multiline_strings[multiline_string].strip()
+                        # Remove all tab characters from each multiline string
+                        multiline_strings[multiline_string] = multiline_strings[multiline_string].replace("\t", " ")
+                        # Replace "\s(?=[A-Za-z]\))" with "\n(?=[A-Za-z]\))"
+                        multiline_strings[multiline_string] = re.sub(r"\s(?=[A-Za-z]\))", r"\n", multiline_strings[multiline_string])
+                        multiline_strings[multiline_string] = re.sub(r"(?<=\n[A-Za-z])\)", r".", multiline_strings[multiline_string])
+                        # Remove multiple newlines
+                        multiline_strings[multiline_string] = re.sub(r"\n\s*\n", r"\n", multiline_strings[multiline_string])
+
+                    # Return the list of multiline strings
+                    return multiline_strings
+
+
+                def parse_answers(text):
+                    lines = text.splitlines()
+
+                    # Loop all each line in the file, and add the first letter in the line to the list of answers if it's not empty
+                    answers = []
+                    for line in lines:
+                        if line.strip() != "":
+                            # Get the first character in the line that's either an uppercase or lowercase letter
+                            # Output: "A" or "a"
+                            first_letter = re.search(r"[A-Za-z]", line).group(0)
+                        
+                            # Add the first letter to the list of answers
+                            answers.append(first_letter)
+
+                    # Return the list of answers
+                    return answers
+
+
+                def show_output():
+                    input_questions = Element("mcq_box")
+                    input_answers = Element("mca_box")
+
+                    questions = read_multiline_strings_from_file(input_questions.element.value)
+                    answers = parse_answers(input_answers.element.value)
+                    
+                    output = ""
+
+                    for i in range(len(questions)):
+                        output += questions[i]
+                        output += "\n\n"
+                        output += answers[i]
+                        output += "\n\n\n"
+
+                    output_box = Element("mco")
+                    output_box.write(output)
+            </py-script>
+
+            <div class="mb-3" id="app">
+                <div class="row gap-2">
+                    <div class="col">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Multiple choice questions (start each new question with a new line and number)" id="mcq_box" style="height: 300px"></textarea>
+                            <label for="floatingTextarea2">Multiple choice questions (start each new question with a new line and number)</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Multiple choice questions (start each new question with a new line and number)" id="mca_box" style="height: 300px"></textarea>
+                            <label for="floatingTextarea2">Multiple choice answers (one line per correct answer)</label>
+                        </div>
+                    </div>  
+                </div>
+                
+                <div class="d-grid gap-1 d-sm-flex justify-content-sm-center mb-5" style="margin-top:40px;">
+                    <a class="btn btn-primary btn-lg px-4 me-sm-3" id="mcb" py-click="show_output()">Generate</a>
+                    <!--<a class="btn btn-outline-secondary btn-lg px-4" href="#usageInstructions" role="button" aria-expanded="false" aria-controls="usageInstructions"id="UsageButton"  data-bs-toggle="collapse" data-bs-target="#usageInstructions">View detailed usage instructions</a>-->
+                </div>
+              
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Output" id="mco" style="height: 200px" disabled></textarea>
+                    <label for="floatingTextarea2">Output</label>
+                </div>
+            </div>
+            
+
+            <!--
+            <strong class="fw-semibold">New Living Translation (NLT)</strong>
+            <span class="d-block small opacity-75">Scripture quotations are taken from the Holy Bible, New Living Translation, copyright ©1996, 2004, 2015 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188, USA. All rights reserved.</span> <br />
+
+            <strong class="fw-semibold">English Standard Version (ESV)</strong>
+            <span class="d-block small opacity-75">Scripture quotations are from The ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</span><br />
+            -->
+
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                  <a href="https://chechu.co" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <img width="97" height="30" src="https://chechu.co/wp-content/uploads/2022/02/Chechu-Logos-01-97x30.png" class="custom-logo" alt="Chechu Siscar" srcset="https://chechu.co/wp-content/uploads/2022/02/Chechu-Logos-01-97x30.png 97w, https://chechu.co/wp-content/uploads/2022/02/Chechu-Logos-01-300x94.png 300w, https://chechu.co/wp-content/uploads/2022/02/Chechu-Logos-01.png 309w" sizes="(max-width: 97px) 100vw, 97px">
+                  </a>
+                  <span>App projects</span>
+                </div>
+              </footer>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    </body>
+</html>
