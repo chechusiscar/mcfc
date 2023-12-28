@@ -21,30 +21,11 @@
             <div class="px-4 pt-5 my-5 text-center border-bottom">
                 <h1 class="display-4 fw-bold">mcfc</h1>
                 <div class="col-lg-6 mx-auto">
-                    <p class="lead mb-4">A utility to create multiple-choice flashcards more efficiently.</p>
+                    <p class="lead mb-4">A tool to create multiple-choice flashcards more efficiently.</p>
                 </div>
-                <!--
-                <div class="collapse" id="usageInstructions" data-bs-parent="#UsageButton">
-                    <div class="card card-body">
-                        <h2>Usage instructions</h2>
-                        <ol>
-                            <li>Coming soon!</li>
-                        </ol>
-
-                        <h2>Known limitations</h2>
-                        <ul>
-                            <li>Coming soon!</li>
-                        </ul>
-                    </div>
-                </div>
-                -->
-                <!--
-                <div class="overflow-hidden" style="max-height: 30vh;">
-                    <div class="container px-5">
-                        <img src="static/screenshot.png" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Sample input and output" width="700" height="500" loading="lazy">
-                    </div>
-                </div>
-                -->
+                
+                
+                
             </div>
 
             <p></p>
@@ -139,13 +120,53 @@
             </div>
             
 
-            <!--
-            <strong class="fw-semibold">New Living Translation (NLT)</strong>
-            <span class="d-block small opacity-75">Scripture quotations are taken from the Holy Bible, New Living Translation, copyright ©1996, 2004, 2015 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188, USA. All rights reserved.</span> <br />
+            
+            <strong class="fw-semibold">Where did <code>mcfc</code> come from?</strong>
+            <span class="d-block small opacity-75">This is based on the Python script I used to convert dumps of multiple-choice questions into a format that can be imported easily into Quizlet.</span> <br />
 
-            <strong class="fw-semibold">English Standard Version (ESV)</strong>
-            <span class="d-block small opacity-75">Scripture quotations are from The ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</span><br />
-            -->
+            <strong class="fw-semibold">How does it work?</strong>
+            <span class="d-block small opacity-75">
+                <ul>
+                    <li>Copy and paste your multiple-choice questions into the first box using the below format.</li>
+                    <pre>
+1.	In case of doubts in the provisions of Labor Code and its implementing rules and regulations, how shall it construed?
+a.	It shall be resolved in favor of the state.
+b.	It shall be resolved in favor of the employer.
+c.	It shall be resolved in favor of the labor.
+d.	It shall be resolved in favor of management.
+
+2.	What is the normal hours of work any employee per week?
+a.	40 hours per week
+b.	48 hours per week
+c.	56 hours per week
+d.	32 hours per week</pre>
+                    <li>Copy and paste your multiple-choice answers into the second box. Question numbers and answer text are optional. The script uses the first letter per line. Remove any extra lines with unnecessary spaces.</li>
+                    <pre>
+1. c.	It shall be resolved in favor of the labor.
+2. b.	48 hours per week</pre>
+                    <li>Click the "Generate" button.</li>
+                    <li>Copy and paste the output.</li>
+                    <pre>
+In case of doubts in the provisions of Labor Code and its implementing rules and regulations, how shall it construed?
+a. It shall be resolved in favor of the state.
+b. It shall be resolved in favor of the employer.
+c. It shall be resolved in favor of the labor.
+d. It shall be resolved in favor of management.
+
+c
+
+
+What is the normal hours of work any employee per week?
+a. 40 hours per week
+b. 48 hours per week
+c. 56 hours per week
+d. 32 hours per week
+
+b</pre>
+                    <li>Import into Quizlet using the following settings: (1) Between term and definition - Custom: <code>\n\n</code> (2) Between cards - Custom: <code>\n\n\n</code> </li>
+                </ul>
+            </span><br />
+            
 
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
                 <div class="col-md-4 d-flex align-items-center">
